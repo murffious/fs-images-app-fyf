@@ -24,7 +24,7 @@ limits: {
  * Adding new file to the storage
  */
 imageRouter.post('/upload', multer.single('file'), (req, res, next) => {
-    console.log('Upload Image');
+    console.log('Upload Image', req.file);
 
     let file = req.file;
     if (file) {

@@ -4,7 +4,7 @@ class AddImageForm extends Component {
     constructor() {
         super();
         this.state = {
-            file: ""
+            image: ""
         }
     }
 
@@ -13,7 +13,7 @@ class AddImageForm extends Component {
         e.persist();
         const { name, value } = e.target;
         this.setState({
-            [name]: value
+            image: e.target.files[0]
         })
     }
 
@@ -24,8 +24,10 @@ class AddImageForm extends Component {
     }
 
     handleSubmit = (e) => {
+        const fd = new FormData();
+        fd.append(this.state.image, this.state.image.name)
         e.preventDefault();
-        this.props.addImage(this.state)
+        this.props.addImage(fd)
             .then(response => {
                 this.clearInputs()
             })
@@ -41,11 +43,11 @@ class AddImageForm extends Component {
                     <input
                         name="file"
                         value={this.state.file}
-                        // onChange={this.handleChange}
+                        onChange={this.handleChange}
                         type="file"
-                        placeholder="File"/>
+                        placeholder="Image"/>
 
-                    <button onClick={this.handleChange}>Upload</button>
+                    <button onClick={this.handleSubmit}>Upload</button>
                 </form>
             </div>
         )
