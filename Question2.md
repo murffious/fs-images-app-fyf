@@ -1,0 +1,2 @@
+Question 2
+You are assigned to a major project that will attempt to abstract and consolidate similar business logic from 2 different applications. While each application serves a different market and user, each application has some shared functionality. Currently the implementation is written separately, but some functions could be abstracted to a single implementation. How would you determine which functionality should be abstracted and used by both applications. Which tools (languages, cloud services, etc.) would you choose to accomplish your implementation?
