@@ -1,6 +1,6 @@
 Create a website that will allow users to upload and view the images that they have uploaded. Implement a sorting function for the images.
 
-1. Create a user authentication
+1. Create a user authentication DONE
 2. Create a landing page where user can view theirs or any other users images
 3. Allow images to be sorted by name or by date uploaded
 4. Allow comments on images and display name of the user that posted the comment

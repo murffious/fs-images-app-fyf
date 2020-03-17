@@ -4,11 +4,12 @@ class AddImageForm extends Component {
     constructor() {
         super();
         this.state = {
-            title: ""
+            file: ""
         }
     }
 
     handleChange = (e) => {
+        console.log(e.target.files[0])
         e.persist();
         const { name, value } = e.target;
         this.setState({
@@ -18,7 +19,7 @@ class AddImageForm extends Component {
 
     clearInputs = () => {
         this.setState({
-            title: ""
+            file: ""
         })
     }
 
@@ -38,13 +39,13 @@ class AddImageForm extends Component {
                     <h4>Add New Image</h4>
 
                     <input
-                        name="title"
-                        value={this.state.title}
-                        onChange={this.handleChange}
-                        type="text"
-                        placeholder="Title"/>
+                        name="file"
+                        value={this.state.file}
+                        // onChange={this.handleChange}
+                        type="file"
+                        placeholder="File"/>
 
-                    <button>+</button>
+                    <button onClick={this.handleChange}>Upload</button>
                 </form>
             </div>
         )
