@@ -25,3 +25,5 @@ yarn-error.log*node_modules/
 .vscode/
 *.orig
 .env
+
+/config/keys.js

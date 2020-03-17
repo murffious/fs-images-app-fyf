@@ -18,6 +18,7 @@ app.use("/api", expressJwt({ secret: process.env.SECRET }));
 
 // Requiring routes
 app.use("/auth", require("./routes/auth.js"));
+app.use("/api/image", require("./routes/image"));
 
 // Error
 app.use((err, req, res, next) => {
