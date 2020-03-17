@@ -1,0 +1,26 @@
+{
+  "name": "imagesapp",
+  "version": "1.0.0",
+  "description": "imagesapp with auth fullstack interview",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Paul Murff",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.0",
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "express-session": "^1.14.2",
+    "jsonwebtoken": "^8.3.0",
+    "mysql2": "^1.6.4",
+    "morgan": "^1.9.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "sequelize": "^4.41.2"
+  }
+}
