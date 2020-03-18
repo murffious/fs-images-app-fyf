@@ -1,27 +1,25 @@
+// packages
 const express = require("express");
 const imageRouter = express.Router();
 const db = require("../models");
 const Multer = require('multer');
-const fs = require('fs')
 const path = require("path");
 const GCP_STORAGE_BUCKET = process.env.GCP_STORAGE_BUCKET
 
-  // Imports the Google Cloud client library
-const { Storage } = require('@google-cloud/storage');
-  // Creates a client from a Google service account key.
-const storage = new Storage({keyFilename: path.join(__dirname, '../config/keys.json')});
+// file upload settings 
 const multer = Multer({
 storage: Multer.memoryStorage(),
 limits: {
     fileSize: 5 * 1024 * 1024 // no larger than 5mb, you can change as needed.
 }
 });
-// give write access etc
+
+//GCP storage setup
 var admin = require("firebase-admin");
 var serviceAccount = require(path.join(__dirname, '../config/keys.json'));
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://images-6efd1.firebaseio.com"
+  databaseURL: process.env.GCP_DATABASE_URL
 });
 const bucket = admin.storage().bucket(GCP_STORAGE_BUCKET);
 
@@ -77,7 +75,9 @@ const uploadImageToStorage = (file) => {
 }
 
 
-
+/**
+ * Get all files // need to change this 
+ */
 imageRouter.get("/all/:userId", (req, res, next) => {
     if (req.params) {
         listFiles().then((files) => {
