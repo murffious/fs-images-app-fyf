@@ -66,9 +66,9 @@ class AddImageForm extends Component {
                         value={this.state.file}
                         onChange={this.handleChange}
                         type="file"
-                        ref={fileInput => this.fileInput = fileInput}
+                        // ref={fileInput => this.fileInput = fileInput}
                         placeholder="Image"/>
-                    <button onClick={()=>this.fileInput.click()}>Select Photo</button>
+                    {/* <button onClick={()=>this.fileInput.click()}>Select Photo</button> */}
 
                     <button onClick={this.handleSubmit}>Upload</button>
                 </form>

@@ -25,6 +25,10 @@ function Navbar(props) {
                         </div>
 
                         <div className="nav-link">
+                            <Link to="/social">Social View</Link>
+                        </div>
+
+                        <div className="nav-link">
                             <button onClick={() => props.logout()}>Logout</button>
                         </div>
                     </React.Fragment>

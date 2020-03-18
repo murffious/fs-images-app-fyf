@@ -1,0 +1,32 @@
+[debug] [2020-03-18T23:08:32.209Z] ----------------------------------------------------------------------
+[debug] [2020-03-18T23:08:32.212Z] Command:       /usr/local/Cellar/node/11.11.0/bin/node /usr/local/bin/firebase functions:config:get --project images-6efd1
+[debug] [2020-03-18T23:08:32.213Z] CLI Version:   3.17.4
+[debug] [2020-03-18T23:08:32.213Z] Platform:      darwin
+[debug] [2020-03-18T23:08:32.213Z] Node Version:  v10.15.3
+[debug] [2020-03-18T23:08:32.214Z] Time:          Wed Mar 18 2020 17:08:32 GMT-0600 (Mountain Daylight Time)
+[debug] [2020-03-18T23:08:32.214Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2020-03-18T23:08:32.230Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-03-18T23:08:32.230Z] > authorizing via signed-in user
+[debug] [2020-03-18T23:08:32.233Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-03-18T23:08:32.233Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token:
+   '1//0487asBieOmkgCgYIARAAGAQSNwF-L9IrhmrzEM8GKgWX4aB84RbcXmi4wgX3W_6bPFCsppIcIPwFrbZlz6TUjl88l_TrWU7wgZ0',
+  client_id:
+   '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope:
+   'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Mar 18 2020 17:08:32 GMT-0600 (Mountain Daylight Time)
+[debug] [2020-03-18T23:08:32.548Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-18T23:08:32.575Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/images-6efd1  
+  
+ Wed Mar 18 2020 17:08:32 GMT-0600 (Mountain Daylight Time)
+[debug] [2020-03-18T23:08:32.968Z] Error: certificate has expired
+    at TLSSocket.onConnectSecure (_tls_wrap.js:1051:34)
+    at TLSSocket.emit (events.js:189:13)
+    at TLSSocket.EventEmitter.emit (domain.js:441:20)
+    at TLSSocket._finishInit (_tls_wrap.js:633:8)
+[error] 
+[error] Error: Server Error. certificate has expired
