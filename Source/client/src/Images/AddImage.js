@@ -11,7 +11,6 @@ class AddImageForm extends Component {
     handleChange = (e) => {
         console.log(e.target.files[0])
         e.persist();
-        const { name, value } = e.target;
         this.setState({
             image: e.target.files[0]
         })

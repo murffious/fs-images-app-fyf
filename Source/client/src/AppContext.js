@@ -25,9 +25,10 @@ export class AppContextProvider extends Component {
     }
 
     getImages = () => {
-        return ImageAxios.get("/api/image")
+        return ImageAxios.get(`/api/image/all/${this.state.user.email}`)
             .then(response => {
-                this.setState({ images: response.data });
+                console.log(response)
+                // this.setState({ images: response.data });
                 return response;
             })
     }
@@ -35,7 +36,6 @@ export class AppContextProvider extends Component {
     addImage = (newImage) => {
         return ImageAxios.post("/api/image/upload", newImage)
             .then(response => {
-                console.log('here')
                 this.setState(prevState => {
                     return { images: [...prevState.images, response.data] }
                 });
