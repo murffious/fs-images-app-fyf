@@ -2,15 +2,15 @@ const express = require("express");
 const imageRouter = express.Router();
 const db = require("../models");
 const Multer = require('multer');
-const keys = require('../config/keys.js')
-
+// const keys = require('../config/keys.js')
+const fs = require('fs')
+const path = require("path");
   // Imports the Google Cloud client library
 const { Storage } = require('@google-cloud/storage');
 
   // Creates a client
   // Creates a client from a Google service account key.
-const storage = new Storage({keyFilename: keys});
-const bucket = storage.bucket("gs://images-6efd1.appspot.com");
+const storage = new Storage({keyFilename: path.join(__dirname, '../config/keys.json')});
 
 const multer = Multer({
 storage: Multer.memoryStorage(),
@@ -19,6 +19,16 @@ limits: {
 }
 });
 
+var admin = require("firebase-admin");
+
+var serviceAccount = require(path.join(__dirname, '../config/keys.json'));
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://images-6efd1.firebaseio.com"
+});
+//add these to env 
+const bucket = admin.storage().bucket("gs://images-6efd1.appspot.com");
 
 /**
  * Adding new file to the storage
@@ -58,13 +68,13 @@ const uploadImageToStorage = (file) => {
     });
 
     blobStream.on('error', (error) => {
+        console.log(error)
         reject('Something is wrong! Unable to upload at the moment.');
     });
 
     blobStream.on('finish', () => {
         // The public URL can be used to directly access the file via HTTP.
-        const url = format(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
-        resolve(url);
+        resolve(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
     });
 
     blobStream.end(file.buffer);

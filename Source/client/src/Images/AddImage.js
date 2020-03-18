@@ -19,14 +19,15 @@ class AddImageForm extends Component {
 
     clearInputs = () => {
         this.setState({
-            file: ""
+            image: ""
         })
     }
 
     handleSubmit = (e) => {
         const fd = new FormData();
-        fd.append(this.state.image, this.state.image.name)
+        fd.append("file", this.state.image)
         e.preventDefault();
+        console.log(fd, this.state)
         this.props.addImage(fd)
             .then(response => {
                 this.clearInputs()
@@ -45,7 +46,9 @@ class AddImageForm extends Component {
                         value={this.state.file}
                         onChange={this.handleChange}
                         type="file"
+                        ref={fileInput => this.fileInput = fileInput}
                         placeholder="Image"/>
+                    <button onClick={()=>this.fileInput.click()}>Select Photo</button>
 
                     <button onClick={this.handleSubmit}>Upload</button>
                 </form>
