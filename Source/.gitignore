@@ -26,4 +26,4 @@ yarn-error.log*node_modules/
 *.orig
 .env
 
-/config/keys.js
+/config/keys.json
