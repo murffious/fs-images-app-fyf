@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import "./Upload.css";
+import Progress from "../Progress/Progress";
 
 class AddImageForm extends Component {
     constructor() {
         super();
         this.state = {
-            image: ""
+            image: "",
+            uploading: false,
+            uploadProgress: {},
+            successfullUploaded: false
         }
     }
 
@@ -33,6 +38,22 @@ class AddImageForm extends Component {
             })
             .catch(err => console.error(err.response.data.message))
     }
+    async uploadFiles() {
+        this.setState({ uploadProgress: {}, uploading: true });
+        const promises = [];
+        this.state.files.forEach(file => {
+          promises.push(this.sendRequest(file));
+        });
+        try {
+          await Promise.all(promises);
+    
+          this.setState({ successfullUploaded: true, uploading: false });
+        } catch (e) {
+          // Not Production ready! Do some error handling here instead...
+          this.setState({ successfullUploaded: true, uploading: false });
+        }
+      }
+    
 
     render() {
         return (
