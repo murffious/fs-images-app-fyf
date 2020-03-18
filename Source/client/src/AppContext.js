@@ -27,8 +27,7 @@ export class AppContextProvider extends Component {
     getImages = () => {
         return ImageAxios.get(`/api/image/all/${this.state.user.email}`)
             .then(response => {
-                console.log(response)
-                this.setState({ images: response.data });
+                this.setState({ images: response.data.files });
                 return response;
             })
     }

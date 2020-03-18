@@ -6,6 +6,7 @@ import Upload from './Upload';
 import ImageCard from './ImageCard';
 
 function ImageList(props) {
+    console.log("hi,", props)
     const Images = props.images.map(image => {
         return (
             <Image

@@ -3,7 +3,7 @@ import React from 'react';
 function Image(props) {
     return (
         <div>
-            <h3>{props.image.title}</h3>
+            <h3>{props.image.id}</h3>
             <label>Completed:</label>
             <input
                 onChange={() => props.editImage(props.image._id, { completed: !props.image.completed })}
