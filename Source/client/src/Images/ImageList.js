@@ -4,25 +4,26 @@ import AddImageForm from "./AddImage.js"
 import { withContext } from "../AppContext";
 // import Upload from './Upload';
 import ImageCard from './ImageCard';
+import ImageGrid  from './ImageGrid';
 
 function ImageList(props) {
     console.log("hi,", props)
-    const Images = props.images.map(image => {
-        return (
-            <ImageCard
-                key={image.id}
-                image={image}
-                editImage={props.editImage}
-                deleteImage={props.deleteImage}
-            />
-        )
-    })
+    // const Images = props.images.map(image => {
+    //     return (
+    //         <ImageCard
+    //             key={image.id}
+    //             image={image}
+    //             editImage={props.editImage}
+    //             deleteImage={props.deleteImage}
+    //         />
+    //     )
+    // })
 
     return (
         <main>
-            {/* <Upload/> Add later if time w/progress and dropzone*/}
             <AddImageForm addImage={props.addImage} />
-            {Images}
+            {/* {Images} */}
+            <ImageGrid  {...props}/>
         </main>
     )
 }
