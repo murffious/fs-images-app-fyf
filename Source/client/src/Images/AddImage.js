@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import "./Upload.css";
-import Progress from "../Progress/Progress";
+// import Progress from "../Progress/Progress";
 
 class AddImageForm extends Component {
     constructor() {

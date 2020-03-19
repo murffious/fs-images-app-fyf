@@ -53,13 +53,18 @@ const uploadImageToStorage = (file) => {
     let newFileName = `${file.originalname}_${Date.now()}`;
 
     let fileUpload = bucket.file(newFileName);
-
+        fileUpload.getSignedUrl({
+        action: 'read',
+        expires: '03-09-2491'
+        }).then(signedUrls => {
+        console.log(signedUrls[0], 'contains the files public URL')
+        });
     const blobStream = fileUpload.createWriteStream({
         metadata: {
         contentType: file.mimetype
         }
     });
-
+    
     blobStream.on('error', (error) => {
         console.log(error)
         reject('Something is wrong! Unable to upload at the moment.');
@@ -67,6 +72,8 @@ const uploadImageToStorage = (file) => {
 
     blobStream.on('finish', () => {
         // The public URL can be used to directly access the file via HTTP.
+        // const publicUrl = .format(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
+        // resolve(publicUrl)
         resolve(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
     });
 
@@ -86,6 +93,7 @@ imageRouter.get("/all/:userId", (req, res, next) => {
             console.error(error);
         });
     }
+    
     async function listFiles() {
         // Lists files in the bucket
         const [files] = await bucket.getFiles();
