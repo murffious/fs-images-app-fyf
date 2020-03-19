@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
-
+var cloudinary = require('cloudinary'),
+    environment = require('./environment').environment;
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
@@ -25,5 +26,16 @@ exports.imageAdded = functions.storage.object().onArchive(event => {
     }
 
     console.log(filePath + ' was uploaded');
-    // YOUR CLOUDINARY UPLOAD CODE WILL GO HERE... read on
+    // Initialize the Cloudinary SDK
+    cloudinary.config(environment.cloudinary);
+    // Upload your file
+    cloudinary.uploader.upload(
+        environment.storage.baseUrl + filePath,
+        (response) => { 
+        console.log('File uploaded to Cloudinary!!');
+        },
+        {
+            public_id: filePath
+        }
+    );
 });

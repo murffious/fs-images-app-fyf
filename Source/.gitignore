@@ -28,3 +28,5 @@ yarn-error.log*node_modules/
 
 /config/keys.json
 notes.md
+
+/functions/environment.js
