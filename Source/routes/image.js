@@ -53,12 +53,12 @@ const uploadImageToStorage = (file) => {
     let newFileName = `${file.originalname}_${Date.now()}`;
     let url;
     let fileUpload = bucket.file(newFileName);
-    fileUpload.getSignedUrl({
-        action: 'read',
-        expires: '03-09-2491'
-        }).then(signedUrls => {
-            url = signedUrls[0]
-        });
+    // fileUpload.getSignedUrl({
+    //     action: 'read',
+    //     expires: '03-09-2491'
+    //     }).then(signedUrls => {
+    //         url = signedUrls[0]
+    //     });
 
        
     
@@ -82,6 +82,7 @@ const uploadImageToStorage = (file) => {
             action: 'read',
             expires: '03-09-2491'
             }).then(signedUrls => {
+                console.log(signedUrls[0])
                 db.Image.create({
                     publicUrl: signedUrls[0],
                     UserId: 26
@@ -92,8 +93,10 @@ const uploadImageToStorage = (file) => {
                     
                   });
             }) 
-           
-            // https://storage.googleapis.com/images-6efd1.appspot.com/Screen%20Shot%202020-03-18%20at%2010.45.38%20AM.png_1584640085550?GoogleAccessId=firebase-adminsdk-1fisj%40images-6efd1.iam.gserviceaccount.com&Expires=16447042800&Signature=XTHRG1OLbPBZOD1e82lJuq%2B
+            //   https://storage.googleapis.com/images-6efd1.appspot.com/Screen%20Shot%202020-03-16%20at%205.19.22%20PM.png_1584641735914?GoogleAccessId=firebase-adminsdk-1fisj%40images-6efd1.iam.gserviceaccount.com&Expires=16447042800&Signature=iwhQA6Lc2Rs9DswgDTqAjcwilXeI3WKevUJLIR6rD3Rons9Fl%2BKmJ4SDobU5u1gJjJiANBZa1wwjQ9c%2BgnCrtKFD%2BcbWjXAY%2BgN69BGK5S4mTZI6FM0B68kXi%2FFKPw5zEdIJilco%2B2HP8nXF0ROPrSLJFY8M%2FumSUIp4jDg2IccDvGLqfBMBN6o82zfh4cEbLHJoZgtO8zfgJKJjd2ZBh%2F2yNUx3m6Xj2qLXQsIrvyXVEh9rxlNFfFAXJw%2Fnx43pPkvwRbPoos1MbmNhNpjMHvzsv%2F6LHsORWhRI7CWAIgFnlSk2eYu3UN%2Bpbbaek6QgUhwBd4JFS1yk3NlDvG1kkg%3D%3D
+            // https://storage.googleapis.com/images-6efd1.appspot.com/Screen%20Shot%202020-03-16%20at%205.19.22%20PM.png_1584641735914?GoogleAccessId=firebase-adminsdk-1fisj%40images-6efd1.iam.gserviceaccount.com&Expires=16447042800&Signature=iwhQA6Lc2Rs9DswgDTqAjcwilXeI3WKevUJLIR6rD3Rons9Fl%2BKmJ4SDobU5u1gJjJiANBZa1wwjQ9c%2BgnCrtKFD%2BcbWjXAY%2BgN69BGK5S4mTZI6FM0B68kXi%2FFKPw5zEdIJilco%2B2HP8nXF0ROPrSLJFY8M%2FumSUIp4jDg2IccDvGLqfBMBN6o82zfh4cEbLHJoZgtO8zfgJKJjd2ZBh%2F2yNUx3m6Xj2qLXQsIrvyXVEh9rxlNFfFAXJw%2Fnx43pPkvwRbPoos1MbmNhNpjMHvzsv%2F6LHsORWhRI7CWAIgFnlSk2eYu3UN%2Bpbbaek6QgUhwBd4JFS1yk3NlDvG1kkg%3D%3D
+            // https://storage.googleapis.com/images-6efd1.appspot.com/Screen%20Shot%202020-03-16%20at%205.19.22%20PM.png_1584641451688?GoogleAccessId=firebase-adminsdk-1fisj%40images-6efd1.iam.gserviceaccount.com&Expires=16447042800&Signature=c8rlZlUs4tlqrteTR7%2FOT1RLMlh1lkuZ4kAtNZ4hO7KHv8CKlwG%2FyJ%2BgaJXukO%2FXnutjeTGEO4yAXU8Q2lQx0Q7B5h%2BExctD9Ony9k6YcDiRmIPa%2FuFOj5nS593DzGC12aRO5OocWLoOcdg042eCtxYug5yV8KlM%2BeXzDLHhCYq4fACr%2BHiyWM1DtkSOdG1s5%2Ffd%2FXCEil86Fkkw2IdhD2lkB9juCEZWF%2BteLPaXNExYFkpPwci2hI0rHK5Ej2CKPtONDwMvUOlqJr96X2QHx1eqJZ9YHiw%2FJx8%2BNUSVD%2FX%2BxKPTRL%2BkulB23uI51MnG8X6aEQ9ujytw9COIOohSJA%3D%3D
+            // https://storage.googleapis.com/images-6efd1.appspot.com/Screen%20Shot%202020-03-16%20at%205.19.22%20PM.png_1584641451688?GoogleAccessId=firebase-adminsdk-1fisj%40images-6efd1.iam.gserviceaccount.com&Expires=16447042800&Signature=c8rlZlUs4tlqrteTR7%2FOT1RL    
         // resolve(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
     });
 

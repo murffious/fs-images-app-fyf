@@ -5,8 +5,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING
     },
     publicUrl: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING(1234),
+      allowNull: false,
     }
   });
   Image.associate = function(models) {
