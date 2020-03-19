@@ -33,7 +33,6 @@ export default function TitlebarGridList(props) {
         
         if (file.publicUrl){
           console.log(file.publicUrl.split('https://storage.googleapis.com/images-6efd1.appspot.com/').pop().split('?GoogleAccessId=')[0])
-
         }
   
     }): null

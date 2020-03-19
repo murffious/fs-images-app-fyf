@@ -39,6 +39,7 @@ export class AppContextProvider extends Component {
                 this.setState(prevState => {
                     return { images: [...prevState.images, response.data] }
                 });
+                this.getImages();
                 return response;
             })
     }
