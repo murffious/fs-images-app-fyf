@@ -98,67 +98,62 @@ const uploadImageToStorage = (file) => {
  * Get all files // need to change this 
  */
 imageRouter.get("/all/:userId", (req, res, next) => {
-  
-    const regenerateThumbnailUrls = async (data, context) => {
-        const images = await bucket.getFiles();
-        const SIZES = [64, 128, 512];
-        images.forEach(image => {
-          const thumbnails = image[0].thumbnailUrls;
-          const imageId = image[0].id;
-          const imageName = image[0].metadata.name.split(".")[0];
-      console.log(thumbnails, imageId, imageName)
-          SIZES.forEach(size => {
-            const thumbnailFileName = `thumb_${imageName}_${size}.jpg`;
-            const storagePath = imageId + "/" + thumbnailFileName;
-            console.log(storagePath);
-            bucket
-              .file(storagePath)
-              .getSignedUrl({
-                action: 'read',
-                expires: '03-09-2491'})
-              .then(signedUrls => {
-                // console.log(signedUrls[0]);
+  //might use cloudinary instead
+    // const regenerateThumbnailUrls = async (data, context) => {
+    //     const images = await bucket.getFiles();
+    //     const SIZES = [64, 128, 512];
+    //     images.forEach(image => {
+    //       const thumbnails = image[0].thumbnailUrls;
+    //       const imageId = image[0].id;
+    //       const imageName = image[0].metadata.name.split(".")[0];
+    //   console.log(thumbnails, imageId, imageName)
+    //       SIZES.forEach(size => {
+    //         const thumbnailFileName = `thumb_${imageName}_${size}.jpg`;
+    //         const storagePath = imageId + "/" + thumbnailFileName;
+    //         console.log(storagePath);
+    //         bucket
+    //           .file(storagePath)
+    //           .getSignedUrl({
+    //             action: 'read',
+    //             expires: '03-09-2491'})
+    //           .then(signedUrls => {
+    //             // console.log(signedUrls[0]);
                 
-              }).then(urls=> {
-                return urls
-              })
-              .catch(error => {
-                console.log(error);
-              });
-          });
-        });
-      };
+    //           }).then(urls=> {
+    //             return urls
+    //           })
+    //           .catch(error => {
+    //             console.log(error);
+    //           });
+    //       });
+    //     });
+    //   };
     if (req.params) {
         listFiles().then((files) => {
         //    const newFiles =  regenerateThumbnailUrls(files)
-            res.status(201).send({ files });
+        console.log(files)
+           return res.status(201).send({ files });
         }).catch((error) => {
             console.error(error);
         });
     }
- 
-   
-    
-    async function listFiles() {
-        // Lists files in the bucket
-        const [files] = await bucket.getFiles();
-        console.log('Files:');
-        files.forEach(async file => {
-            
-            // var url = (await file.getDownloadURL()).toString();
-            // console.log(url.toString(), url)
-          
-            //  await file.getSignedUrl({
-            //     action: 'read',
-            //     expires: '03-09-2491'
-            //     }).then(signedUrls => {
-                    
-            //         URLS.push(signedUrls[0].toString())
-            //     });
-            console.log("d",file.name);
 
-            
-        });
+    async function listFiles() {
+        const files =   await db.Image.findAll({
+            include: [{
+              model: db.User,
+              where: { email: req.params.userId }
+             }]
+          }).then(images => {
+              console.log("yo",images)
+             return images;
+          });
+        // Lists files in the bucket
+        // const [files] = await bucket.getFiles();
+        // console.log('Files:');
+        // files.forEach(async file => {
+        //     console.log("d",file.name);     
+        // });
         return files;
     }
 });
