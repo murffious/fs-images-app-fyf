@@ -1,17 +1,12 @@
+// packages
 const express = require("express");
 const imageRouter = express.Router();
 const db = require("../models");
 const Multer = require('multer');
-// const keys = require('../config/keys.js')
-const fs = require('fs')
 const path = require("path");
-  // Imports the Google Cloud client library
-const { Storage } = require('@google-cloud/storage');
+const GCP_STORAGE_BUCKET = process.env.GCP_STORAGE_BUCKET
 
-  // Creates a client
-  // Creates a client from a Google service account key.
-const storage = new Storage({keyFilename: path.join(__dirname, '../config/keys.json')});
-
+// file upload settings 
 const multer = Multer({
 storage: Multer.memoryStorage(),
 limits: {
@@ -19,86 +14,139 @@ limits: {
 }
 });
 
+//GCP storage setup
 var admin = require("firebase-admin");
-
 var serviceAccount = require(path.join(__dirname, '../config/keys.json'));
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://images-6efd1.firebaseio.com"
+  databaseURL: process.env.GCP_DATABASE_URL
 });
-//add these to env 
-const bucket = admin.storage().bucket("gs://images-6efd1.appspot.com");
+const bucket = admin.storage().bucket(GCP_STORAGE_BUCKET);
 
-/**
- * Adding new file to the storage
- */
-imageRouter.post('/upload', multer.single('file'), (req, res, next) => {
-    console.log('Upload Image', req.file);
 
-    let file = req.file;
-    if (file) {
-    uploadImageToStorage(file).then((success) => {
-        res.status(200).send({
-        status: 'success'
+    /**
+     * Adding new file to the storage
+     */
+    imageRouter.post('/upload', multer.single('file'), (req, res, next) => {
+        console.log('Upload Image');
+
+        let file = req.file;
+        if (file) {
+        uploadImageToStorage(file).then((success) => {
+            res.status(200).send({
+            status: 'success'
+            });
+        }).catch((error) => {
+            console.error(error);
         });
-    }).catch((error) => {
-        console.error(error);
-    });
-    }
-});
-
-/**
- * Upload the image file to Google Storage
- * @param {File} file object that will be uploaded to Google Storage
- */
-const uploadImageToStorage = (file) => {
-    return new Promise((resolve, reject) => {
-    if (!file) {
-        reject('No image file');
-    }
-    let newFileName = `${file.originalname}_${Date.now()}`;
-
-    let fileUpload = bucket.file(newFileName);
-
-    const blobStream = fileUpload.createWriteStream({
-        metadata: {
-        contentType: file.mimetype
         }
     });
 
-    blobStream.on('error', (error) => {
-        console.log(error)
-        reject('Something is wrong! Unable to upload at the moment.');
+    /**
+     * Upload the image file to Google Storage
+     * @param {File} file object that will be uploaded to Google Storage
+     */
+    const uploadImageToStorage = (file) => {
+        return new Promise((resolve, reject) => {
+        if (!file) {
+            reject('No image file');
+        }
+        let newFileName = `${file.originalname}_${Date.now()}`;
+        let fileUpload = bucket.file(newFileName);
+
+        const blobStream = fileUpload.createWriteStream({
+            metadata: {
+            contentType: file.mimetype,
+            }
+        });
+        
+        blobStream.on('error', (error) => {
+            console.log(error)
+            reject('Something is wrong! Unable to upload at the moment.');
+        });
+
+        blobStream.on('finish', () => {
+            resolve(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);   
+        });
+
+    
+        blobStream.end(file.buffer);
+        });
+    }
+
+
+    /**
+     * Get all files/user // need to change this 
+     * @param {User} eamil in this case userID is email return all files from db
+     * //use folders if time or add id to upload
+     */
+    imageRouter.get("/all/:userId", (req, res, next) => {
+        if (req.params) {
+            listFiles().then((files) => {
+            console.log("sending images")
+            return res.status(201).send({ files });
+            }).catch((error) => {
+                console.error(error);
+            });
+        }
+
+        async function listFiles() {
+            const files =   await db.Image.findAll({
+                include: [{
+                model: db.User,
+                where: { email: req.params.userId }
+                }]
+            }).then(images => {
+                
+                return images;
+            });
+        
+            return files;
+        }
     });
 
-    blobStream.on('finish', () => {
-        // The public URL can be used to directly access the file via HTTP.
-        resolve(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
+
+    /**
+     * Get all files/user // need to change this 
+     * return all files from  Google Storage //use folders if time or add id to upload
+     */
+    imageRouter.get("/all", async (req, res, next) => {
+        // Lists files in the bucket - just helpful logging - can delete 
+        const [files] = await bucket.getFiles();
+        console.log('Files:');
+        files.forEach(async file => {
+            console.log("d",file.name);     
+        });
+        return res.status(201).send({ files });
     });
 
-    blobStream.end(file.buffer);
+
+    imageRouter.get("/:imageId", (req, res, next) => {
+
     });
-}
 
+    imageRouter.put("/:imageId", (req, res, next) => {
+        // https://firebase.google.com/docs/storage/web/file-metadata
+        // Create a reference to the file whose metadata we want to change
+        var forestRef = storageRef.child('images/forest.jpg');
 
+        // Create file metadata to update
+        var newMetadata = {
+        cacheControl: 'public,max-age=300',
+        contentType: 'image/jpeg'
+        }
 
-imageRouter.get("/", (req, res, next) => {
+        // Update metadata properties
+        forestRef.updateMetadata(newMetadata).then(function(metadata) {
+        // Updated metadata for 'images/forest.jpg' is returned in the Promise
+        }).catch(function(error) {
+        // Uh-oh, an error occurred!
+        });
+    });
 
-});
-
-
-imageRouter.get("/:imageId", (req, res, next) => {
-
-});
-
-imageRouter.put("/:imageId", (req, res, next) => {
-   
-});
-
-imageRouter.delete("/:imageId", (req, res, next) => {
-   
-});
+    imageRouter.delete("/:imageId", (req, res, next) => {
+    
+    });
 
 module.exports = imageRouter;
 

@@ -3,13 +3,13 @@ import React from 'react';
 function Image(props) {
     return (
         <div>
-            <h3>{props.image.title}</h3>
-            <label>Completed:</label>
+            <h3>{props.image.id}</h3>
+            <label>Image:</label>
             <input
-                onChange={() => props.editImage(props.image._id, { completed: !props.image.completed })}
+                onChange={() => props.editImage(props.image.id, { completed: !props.image.completed })}
                 type="checkbox"
                 checked={props.image.completed}/>
-            <button onClick={() => props.deleteImage(props.image._id)}>X</button>
+            <button onClick={() => props.deleteImage(props.image.id)}>X</button>
         </div>
     )
 }

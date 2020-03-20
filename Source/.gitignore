@@ -27,3 +27,6 @@ yarn-error.log*node_modules/
 .env
 
 /config/keys.json
+notes.md
+
+/functions/environment.js
