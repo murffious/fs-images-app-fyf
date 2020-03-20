@@ -6,20 +6,6 @@ const Multer = require('multer');
 const path = require("path");
 const GCP_STORAGE_BUCKET = process.env.GCP_STORAGE_BUCKET
 
-const firebase = require("firebase");
-// Required for side-effects
-require("firebase/functions");
-firebase.initializeApp({
-    apiKey: 'AIzaSyDxbHn_emVWEPFlBYmzTmxMMouHORc6IzE',
-    authDomain: 'https://accounts.google.com/o/oauth2/auth',
-    projectId: 'images-6efd1',
-    databaseURL: process.env.GCP_DATABASE_URL,
-  });
-  
-  // Initialize Cloud Functions through Firebase
-  var functions = firebase.functions();
-
-
 // file upload settings 
 const multer = Multer({
 storage: Multer.memoryStorage(),
@@ -36,8 +22,8 @@ admin.initializeApp({
   databaseURL: process.env.GCP_DATABASE_URL
 });
 const bucket = admin.storage().bucket(GCP_STORAGE_BUCKET);
-// Initialize Cloud Functions through Firebase
-var functions = firebase.functions();
+
+
 /**
  * Adding new file to the storage
  */
@@ -80,17 +66,14 @@ const uploadImageToStorage = (file) => {
     });
 
     blobStream.on('finish', () => {
-        // The public URL can be used to directly access the file via HTTP.
-        // write my own format remember to escape space or % stuff 
-        // const publicUrl = .format(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
-        // resolve(publicUrl)  format not a function error from google code - outdatedl ikley
+    
         const publicUrl = fileUpload.getSignedUrl({
             action: 'read',
             expires: '03-09-2491'
             }).then(signedUrls => {
                 console.log(signedUrls[0])
                 db.Image.create({
-                    publicUrl: signedUrls[0],
+                    publicUrl: signedUrls[0],                
                     UserId: 26
                   }).then(function (publicUrl){
                         resolve(publicUrl)
@@ -98,9 +81,7 @@ const uploadImageToStorage = (file) => {
                     console.log(err)
                     
                   });
-            }) 
-          
-        // resolve(`https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`);
+            })           
     });
 
    
@@ -110,42 +91,13 @@ const uploadImageToStorage = (file) => {
 
 
 /**
- * Get all files // need to change this 
+ * Get all files/user // need to change this 
+ * @param {User} eamil in this case userID is email return all files from db
+ * //use folders if time or add id to upload
  */
 imageRouter.get("/all/:userId", (req, res, next) => {
-  //might use cloudinary instead
-    // const regenerateThumbnailUrls = async (data, context) => {
-    //     const images = await bucket.getFiles();
-    //     const SIZES = [64, 128, 512];
-    //     images.forEach(image => {
-    //       const thumbnails = image[0].thumbnailUrls;
-    //       const imageId = image[0].id;
-    //       const imageName = image[0].metadata.name.split(".")[0];
-    //   console.log(thumbnails, imageId, imageName)
-    //       SIZES.forEach(size => {
-    //         const thumbnailFileName = `thumb_${imageName}_${size}.jpg`;
-    //         const storagePath = imageId + "/" + thumbnailFileName;
-    //         console.log(storagePath);
-    //         bucket
-    //           .file(storagePath)
-    //           .getSignedUrl({
-    //             action: 'read',
-    //             expires: '03-09-2491'})
-    //           .then(signedUrls => {
-    //             // console.log(signedUrls[0]);
-                
-    //           }).then(urls=> {
-    //             return urls
-    //           })
-    //           .catch(error => {
-    //             console.log(error);
-    //           });
-    //       });
-    //     });
-    //   };
     if (req.params) {
         listFiles().then((files) => {
-        //    const newFiles =  regenerateThumbnailUrls(files)
         console.log("sending images")
            return res.status(201).send({ files });
         }).catch((error) => {
@@ -163,14 +115,24 @@ imageRouter.get("/all/:userId", (req, res, next) => {
              
              return images;
           });
-        // Lists files in the bucket
-        // const [files] = await bucket.getFiles();
-        // console.log('Files:');
-        // files.forEach(async file => {
-        //     console.log("d",file.name);     
-        // });
+    
         return files;
     }
+});
+
+
+/**
+ * Get all files/user // need to change this 
+ * return all files from  Google Storage //use folders if time or add id to upload
+ */
+imageRouter.get("/all", async (req, res, next) => {
+    // Lists files in the bucket - just helpful logging - can delete 
+    const [files] = await bucket.getFiles();
+    console.log('Files:');
+    files.forEach(async file => {
+        console.log("d",file.name);     
+    });
+    return res.status(201).send({ files });
 });
 
 
