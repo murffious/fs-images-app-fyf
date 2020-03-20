@@ -5,10 +5,12 @@ const path = require('path');
 const spawn = require('child-process-promise').spawn;
 // // Create and Deploy Your Cloud Functions
 
-const projectId = 'images-6efd1'
+const projectId = functions.config().imageservice.id
+
 let gcs = new Storage ({
-  projectId
+    projectId
 });
+    
 exports.onFileChange = functions.storage.object().onFinalize(event => {
     // const object = event.bucket;
     const bucket = event.bucket;
