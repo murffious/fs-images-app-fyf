@@ -20,3 +20,9 @@ module.exports = function(sequelize, DataTypes) {
 
   return Image;
 };
+
+// switched to frebase just to handle more efficiently 
+// \\  console.log(signedUrls[0])
+// db.Image.create({
+//     publicUrl: signedUrls[0],                
+//     UserId: 26
