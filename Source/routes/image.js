@@ -6,6 +6,20 @@ const Multer = require('multer');
 const path = require("path");
 const GCP_STORAGE_BUCKET = process.env.GCP_STORAGE_BUCKET
 
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/functions");
+firebase.initializeApp({
+    apiKey: 'AIzaSyDxbHn_emVWEPFlBYmzTmxMMouHORc6IzE',
+    authDomain: 'https://accounts.google.com/o/oauth2/auth',
+    projectId: 'images-6efd1',
+    databaseURL: process.env.GCP_DATABASE_URL,
+  });
+  
+  // Initialize Cloud Functions through Firebase
+  var functions = firebase.functions();
+
+
 // file upload settings 
 const multer = Multer({
 storage: Multer.memoryStorage(),
@@ -22,7 +36,8 @@ admin.initializeApp({
   databaseURL: process.env.GCP_DATABASE_URL
 });
 const bucket = admin.storage().bucket(GCP_STORAGE_BUCKET);
-
+// Initialize Cloud Functions through Firebase
+var functions = firebase.functions();
 /**
  * Adding new file to the storage
  */
@@ -131,7 +146,7 @@ imageRouter.get("/all/:userId", (req, res, next) => {
     if (req.params) {
         listFiles().then((files) => {
         //    const newFiles =  regenerateThumbnailUrls(files)
-        console.log(files)
+        console.log("sending images")
            return res.status(201).send({ files });
         }).catch((error) => {
             console.error(error);
@@ -145,7 +160,7 @@ imageRouter.get("/all/:userId", (req, res, next) => {
               where: { email: req.params.userId }
              }]
           }).then(images => {
-              console.log("yo",images)
+             
              return images;
           });
         // Lists files in the bucket

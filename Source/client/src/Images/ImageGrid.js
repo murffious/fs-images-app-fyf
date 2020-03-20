@@ -27,16 +27,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function TitlebarGridList(props) {
   const classes = useStyles();
-  console.log("jhkj",props)
-  useEffect(() => {
-    props.images ? props.images.map(file => {
+  // useEffect(() => {
+  //   props.images ? props.images.map(file => {
         
-        if (file.publicUrl){
-          console.log(file.publicUrl.split('https://storage.googleapis.com/images-6efd1.appspot.com/').pop().split('?GoogleAccessId=')[0])
-        }
+  //       if (file.publicUrl){
+  //         console.log(file.publicUrl.split('https://storage.googleapis.com/images-6efd1.appspot.com/').pop().split('?GoogleAccessId=')[0])
+  //       }
   
-    }): null
-  });
+  //   }): null
+  // });
 
 
   return (

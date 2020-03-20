@@ -1,41 +1,42 @@
 const functions = require('firebase-functions');
-var cloudinary = require('cloudinary'),
-    environment = require('./environment').environment;
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
-// Error: "onChange" is now deprecated, please use "onArchive", "onDelete", "onFinalize", or "onMetadataUpdate".
-// This will run any time you upload a file to your GCS bucket
-exports.imageAdded = functions.storage.object().onArchive(event => {
+const { Storage } = require('@google-cloud/storage');
+const os = require('os');
+const path = require('path');
+const spawn = require('child-process-promise').spawn;
+// // Create and Deploy Your Cloud Functions
 
-    const object = event.data;
-    const filePath = object.name;
-    const contentType = object.contentType;
-    const resourceState = object.resourceState;
+const projectId = 'images-6efd1'
+let gcs = new Storage ({
+  projectId
+});
+exports.onFileChange = functions.storage.object().onFinalize(event => {
+    // const object = event.bucket;
+    const bucket = event.bucket;
+    const contentType = event.contentType;
+    const filePath = event.name;
+    console.log('File change detected, function execution started');
 
-    // Only continue if this is an image
-    if (!contentType.startsWith('image/')) {
-        return;
-    }
-    // Exit if this is a move or deletion event.
-    if (resourceState === 'not_exists') {
+    if (event.resourceState === 'not_exists') {
+        console.log('We deleted a file, exit...');
         return;
     }
 
-    console.log(filePath + ' was uploaded');
-    // Initialize the Cloudinary SDK
-    cloudinary.config(environment.cloudinary);
-    // Upload your file
-    cloudinary.uploader.upload(
-        environment.storage.baseUrl + filePath,
-        (response) => { 
-        console.log('File uploaded to Cloudinary!!');
-        },
-        {
-            public_id: filePath
-        }
-    );
+    if (path.basename(filePath).startsWith('resized-')) {
+        console.log('We already renamed that file!');
+        return;
+    }
+
+    const destBucket = gcs.bucket(bucket);
+    const tmpFilePath = path.join(os.tmpdir(), path.basename(filePath));
+    const metadata = { contentType: contentType };
+    return destBucket.file(filePath).download({
+        destination: tmpFilePath
+    }).then(() => {
+        return spawn('convert', [tmpFilePath, '-resize', '500x500', tmpFilePath]);
+    }).then(() => {
+        return destBucket.upload(tmpFilePath, {
+            destination: 'resized-' + path.basename(filePath),
+            metadata: metadata
+        })
+    });
 });

@@ -3,11 +3,11 @@ import React from 'react';
 import AddImageForm from "./AddImage.js"
 import { withContext } from "../AppContext";
 // import Upload from './Upload';
-import ImageCard from './ImageCard';
+// import ImageCard from './ImageCard';
 import ImageGrid  from './ImageGrid';
 
 function ImageList(props) {
-    console.log("hi,", props)
+    console.log("Image List")
     // const Images = props.images.map(image => {
     //     return (
     //         <ImageCard
