@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import request from 'superagent';
 
-// import "./Upload.css";
-// import Progress from "../Progress/Progress";
-const CLOUDINARY_UPLOAD_PRESET = 'j9jodru9';
-const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dpbhdlm1j/upload';
 class AddImageForm extends Component {
     constructor() {
         super();
@@ -40,25 +35,9 @@ class AddImageForm extends Component {
                 return this.clearInputs()
             })
             .catch(err => console.error(err.response.data.message))
-        //   return this.handleImageUpload(fd)  
+       
     }
-    // handleImageUpload = file => {
-    //     let upload = request.post(CLOUDINARY_UPLOAD_URL)
-    //                      .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
-    //                      .field('file', file);
-    
-    //     upload.end((err, response) => {
-    //       if (err) {
-    //         console.error(err);
-    //       }
-    
-    //       if (response.body.secure_url !== '') {
-    //         this.setState({
-    //           uploadedFileCloudinaryUrl: response.body.secure_url
-    //         });
-    //       }
-    //     });
-    //   }
+   
     // async uploadFiles() { --add for muliptle and progress
     //     this.setState({ uploadProgress: {}, uploading: true });
     //     const promises = [];
