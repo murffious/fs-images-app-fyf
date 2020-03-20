@@ -1,15 +1,19 @@
 'use strict';
 const functions = require('firebase-functions');
-const { Storage } = require('@google-cloud/storage');
+//old way
+// const { Storage } = require('@google-cloud/storage');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const spawn = require('child-process-promise').spawn;
 // // Create and Deploy Your Cloud Functions
-const projectId = functions.config().imageservice.id
-let gcs = new Storage ({
-    projectId
-});
+const projectId = functions.config().imageservice.id;
+const apikey = functions.config().imageservice.apikey;
+
+//old way
+// let gcs = new Storage ({ 
+//     projectId
+// });
 const mkdirp = require('mkdirp');
 const admin = require('firebase-admin');
 const firebase = require('firebase');
@@ -17,9 +21,9 @@ admin.initializeApp();
 // Initialize Firebase
 
 var config = {
-    apiKey: "AIzaSyDxbHn_emVWEPFlBYmzTmxMMouHORc6IzE",
-    authDomain: "images-6efd1@appspot.gserviceaccount.com",
-    databaseURL: "https://images-6efd1.firebaseio.com/",
+    apiKey: apikey,
+    authDomain: `${projectId}@appspot.gserviceaccount.com`,
+    databaseURL: `https://${projectId}.firebaseio.com/`,
     storageBucket: projectId
   };
   
